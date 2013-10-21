@@ -59,7 +59,7 @@ GLfloat cubeVertices[] {
 	 1.0, -1.0, -1.0,		0.0, 1.0, 0.0,
 };
 
-GLuint VBO;
+GLuint cube_VBO;
 
 GLuint shaderProgram;
 std::unique_ptr<Shader> vertexShader;
@@ -110,9 +110,9 @@ void init()
 
 	glEnable(GL_DEPTH_TEST);
 
-	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &cube_VBO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, cube_VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(posAttrib);
