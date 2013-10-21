@@ -116,6 +116,7 @@ void init()
 	GLint uniProj   = glGetUniformLocation(shaderProgram, "projection");
 	      uniView   = glGetUniformLocation(shaderProgram, "view");
 	      uniModel  = glGetUniformLocation(shaderProgram, "model");
+	GLint uniAmbient = glGetUniformLocation(shaderProgram, "Ambient");
 
 	glClearColor(0.1, 0.1, 0.1, 1.0);
 
@@ -155,6 +156,9 @@ void init()
 
 	projection = glm::perspective(80.0f, (float) WIDTH / HEIGHT, 0.1f, 50.0f);
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
+
+	/** Lighting **/
+	glUniform3f(uniAmbient, 0.2, 0.2, 0.4);
 }
 
 void update(float dt)
