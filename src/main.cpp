@@ -6,6 +6,7 @@
 #include <SFML/Window.hpp>
 
 #include <memory>
+#include <iostream>
 
 constexpr int WIDTH  = 800,
               HEIGHT = 600;
@@ -90,8 +91,18 @@ void render()
 
 int main()
 {
-	window.create(sf::VideoMode(WIDTH, HEIGHT), "OpenGL Demo", sf::Style::Close);
+	sf::ContextSettings contextSettings;
+	contextSettings.depthBits = 24;
+	contextSettings.antialiasingLevel = 8;
+
+	window.create(sf::VideoMode(WIDTH, HEIGHT), "OpenGL Demo", sf::Style::Close, contextSettings);
 	window.setVerticalSyncEnabled(true);
+
+	contextSettings = window.getSettings();
+	std::cout
+		<< "DEPTH BITS: " << contextSettings.depthBits << std::endl
+		<< "ANTIALIAS: " << contextSettings.antialiasingLevel << std::endl
+		;
 
 	glewExperimental = GL_TRUE;
 	glewInit();
