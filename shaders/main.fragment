@@ -1,12 +1,20 @@
 #version 130
 
 in vec3 Color;
+in vec3 Normal;
+
+uniform mat4 view;
 
 uniform vec3 Ambient;
+uniform vec3 LightDirection;
 
 void main()
 {
-	vec3 scatteredLight = Ambient;
+	vec3 LightColor = vec3(1);
+
+	float diffuse = max(0.0, dot(Normal, LightDirection));
+
+	vec3 scatteredLight = Ambient + LightColor * diffuse;
 	vec3 rgb = min(Color * scatteredLight, vec3(1.0));
 
 	gl_FragColor = vec4(rgb, 1.0);

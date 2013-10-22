@@ -82,6 +82,9 @@ glm::mat4 model;
 GLuint uniView;
 GLuint uniModel;
 GLuint uniNormalMatrix;
+GLuint uniLightDirection;
+
+glm::vec3 LightDirection = glm::normalize(glm::vec3(1, 1, 1));
 
 void handleEvent(sf::Event &event)
 {
@@ -119,6 +122,7 @@ void init()
 	      uniView   = glGetUniformLocation(shaderProgram, "view");
 	      uniModel  = glGetUniformLocation(shaderProgram, "model");
 	      uniNormalMatrix = glGetUniformLocation(shaderProgram, "normalMatrix");
+	      uniLightDirection = glGetUniformLocation(shaderProgram, "LightDirection");
 	GLint uniAmbient = glGetUniformLocation(shaderProgram, "Ambient");
 
 	glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -180,6 +184,9 @@ void update(float dt)
 	view = glm::translate(view, -glm::vec3(0, 0, 4));
 	view = glm::rotate(view, gameTime*-10, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+
+	glm::vec3 lightDir = glm::mat3(view) * LightDirection;
+	glUniform3fv(uniLightDirection, 1, glm::value_ptr(lightDir));
 }
 
 void pushNormalMatrix()
