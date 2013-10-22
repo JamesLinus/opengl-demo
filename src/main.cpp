@@ -23,47 +23,47 @@ float gameTime;
 
 GLfloat cubeVertices[] {
 	// Front
-	-1.0, -1.0,  1.0,		1.0, 0.0, 0.0,
-	-1.0,  1.0,  1.0,		0.0, 1.0, 0.0,
-	 1.0,  1.0,  1.0,		0.0, 0.0, 1.0,
-	 1.0, -1.0,  1.0,		1.0, 0.0, 1.0,
+	-1.0, -1.0,  1.0,		1.0, 0.0, 0.0,		0.0, 0.0, 1.0,
+	-1.0,  1.0,  1.0,		0.0, 1.0, 0.0,		0.0, 0.0, 1.0,
+	 1.0,  1.0,  1.0,		0.0, 0.0, 1.0,		0.0, 0.0, 1.0,
+	 1.0, -1.0,  1.0,		1.0, 0.0, 1.0,		0.0, 0.0, 1.0,
 
 	// Back
-	-1.0, -1.0, -1.0,		0.0, 0.0, 1.0,
-	-1.0,  1.0, -1.0,		1.0, 0.0, 1.0,
-	 1.0,  1.0, -1.0,		1.0, 0.0, 0.0,
-	 1.0, -1.0, -1.0,		0.0, 1.0, 0.0,
+	-1.0, -1.0, -1.0,		0.0, 0.0, 1.0,		0.0, 0.0, -1.0,
+	-1.0,  1.0, -1.0,		1.0, 0.0, 1.0,		0.0, 0.0, -1.0,
+	 1.0,  1.0, -1.0,		1.0, 0.0, 0.0,		0.0, 0.0, -1.0,
+	 1.0, -1.0, -1.0,		0.0, 1.0, 0.0,		0.0, 0.0, -1.0,
 
 	// Right
-	 1.0, -1.0,  1.0,		1.0, 0.0, 1.0,
-	 1.0,  1.0,  1.0,		0.0, 0.0, 1.0,
-	 1.0,  1.0, -1.0,		1.0, 0.0, 0.0,
-	 1.0, -1.0, -1.0,		0.0, 1.0, 0.0,
+	 1.0, -1.0,  1.0,		1.0, 0.0, 1.0,		1.0, 0.0, 0.0,
+	 1.0,  1.0,  1.0,		0.0, 0.0, 1.0,		1.0, 0.0, 0.0,
+	 1.0,  1.0, -1.0,		1.0, 0.0, 0.0,		1.0, 0.0, 0.0,
+	 1.0, -1.0, -1.0,		0.0, 1.0, 0.0,		1.0, 0.0, 0.0,
 
 	// Left
-	-1.0, -1.0,  1.0,		1.0, 0.0, 0.0,
-	-1.0,  1.0,  1.0,		0.0, 1.0, 0.0,
-	-1.0,  1.0, -1.0,		1.0, 0.0, 1.0,
-	-1.0, -1.0, -1.0,		0.0, 0.0, 1.0,
+	-1.0, -1.0,  1.0,		1.0, 0.0, 0.0,		-1.0, 0.0, 0.0,
+	-1.0,  1.0,  1.0,		0.0, 1.0, 0.0,		-1.0, 0.0, 0.0,
+	-1.0,  1.0, -1.0,		1.0, 0.0, 1.0,		-1.0, 0.0, 0.0,
+	-1.0, -1.0, -1.0,		0.0, 0.0, 1.0,		-1.0, 0.0, 0.0,
 
 	// Top
-	 1.0,  1.0,  1.0,		0.0, 0.0, 1.0,
-	-1.0,  1.0,  1.0,		0.0, 1.0, 0.0,
-	-1.0,  1.0, -1.0,		1.0, 0.0, 1.0,
-	 1.0,  1.0, -1.0,		1.0, 0.0, 0.0,
+	 1.0,  1.0,  1.0,		0.0, 0.0, 1.0,		0.0, 1.0, 0.0,
+	-1.0,  1.0,  1.0,		0.0, 1.0, 0.0,		0.0, 1.0, 0.0,
+	-1.0,  1.0, -1.0,		1.0, 0.0, 1.0,		0.0, 1.0, 0.0,
+	 1.0,  1.0, -1.0,		1.0, 0.0, 0.0,		0.0, 1.0, 0.0,
 
 	// Bottom
-	 1.0, -1.0,  1.0,		1.0, 0.0, 1.0,
-	-1.0, -1.0,  1.0,		1.0, 0.0, 0.0,
-	-1.0, -1.0, -1.0,		0.0, 0.0, 1.0,
-	 1.0, -1.0, -1.0,		0.0, 1.0, 0.0,
+	 1.0, -1.0,  1.0,		1.0, 0.0, 1.0,		0.0, -1.0, 0.0,
+	-1.0, -1.0,  1.0,		1.0, 0.0, 0.0,		0.0, -1.0, 0.0,
+	-1.0, -1.0, -1.0,		0.0, 0.0, 1.0,		0.0, -1.0, 0.0,
+	 1.0, -1.0, -1.0,		0.0, 1.0, 0.0,		0.0, -1.0, 0.0,
 };
 
 GLfloat floorVertices[] {
-	-5.0, -2.0, -5.0,		0.5, 0.5, 0.5,
-	-5.0, -2.0,  5.0,		0.5, 0.5, 0.5,
-	 5.0, -2.0,  5.0,		0.5, 0.5, 0.5,
-	 5.0, -2.0, -5.0,		0.5, 0.5, 0.5,
+	-5.0, -2.0, -5.0,		0.5, 0.5, 0.5,		0.0, 1.0, 0.0,
+	-5.0, -2.0,  5.0,		0.5, 0.5, 0.5,		0.0, 1.0, 0.0,
+	 5.0, -2.0,  5.0,		0.5, 0.5, 0.5,		0.0, 1.0, 0.0,
+	 5.0, -2.0, -5.0,		0.5, 0.5, 0.5,		0.0, 1.0, 0.0,
 };
 
 GLuint cube_VAO;
@@ -113,6 +113,7 @@ void init()
 
 	GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
 	GLint colAttrib = glGetAttribLocation(shaderProgram, "color");
+	GLint normalAttrib = glGetAttribLocation(shaderProgram, "normal");
 	GLint uniProj   = glGetUniformLocation(shaderProgram, "projection");
 	      uniView   = glGetUniformLocation(shaderProgram, "view");
 	      uniModel  = glGetUniformLocation(shaderProgram, "model");
@@ -132,11 +133,15 @@ void init()
 
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE,
-		6 * sizeof(GLfloat), 0);
+		9 * sizeof(GLfloat), 0);
 
 	glEnableVertexAttribArray(colAttrib);
 	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE,
-		6 * sizeof(GLfloat), (void *) (3 * sizeof(GLfloat)));
+		9 * sizeof(GLfloat), (void *) (3 * sizeof(GLfloat)));
+
+	glEnableVertexAttribArray(normalAttrib);
+	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE,
+		9 * sizeof(GLfloat), (void *) (6 * sizeof(GLfloat)));
 
 	/** FLOOR **/
 	glGenVertexArrays(1, &floor_VAO);
@@ -148,11 +153,15 @@ void init()
 
 	glEnableVertexAttribArray(posAttrib);
 	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE,
-		6 * sizeof(GLfloat), 0);
+		9 * sizeof(GLfloat), 0);
 
 	glEnableVertexAttribArray(colAttrib);
 	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE,
-		6 * sizeof(GLfloat), (void *) (3 * sizeof(GLfloat)));
+		9 * sizeof(GLfloat), (void *) (3 * sizeof(GLfloat)));
+
+	glEnableVertexAttribArray(normalAttrib);
+	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE,
+		9 * sizeof(GLfloat), (void *) (6 * sizeof(GLfloat)));
 
 	projection = glm::perspective(80.0f, (float) WIDTH / HEIGHT, 0.1f, 50.0f);
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
