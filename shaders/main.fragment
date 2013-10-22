@@ -7,15 +7,23 @@ uniform mat4 view;
 
 uniform vec3 Ambient;
 uniform vec3 LightDirection;
+uniform vec3 HalfVector;
 
 void main()
 {
 	vec3 LightColor = vec3(1);
 
 	float diffuse = max(0.0, dot(Normal, LightDirection));
+	float specular = max(0.0, dot(Normal, HalfVector));
+
+	if (diffuse == 0)
+		specular = 0;
+	else
+		specular = pow(specular, 400);
 
 	vec3 scatteredLight = Ambient + LightColor * diffuse;
-	vec3 rgb = min(Color * scatteredLight, vec3(1.0));
+	vec3 reflectedLight = LightColor * specular * 0.5;
 
+	vec3 rgb = min(Color * scatteredLight + reflectedLight, vec3(1.0));
 	gl_FragColor = vec4(rgb, 1.0);
 }

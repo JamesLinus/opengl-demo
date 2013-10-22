@@ -83,8 +83,9 @@ GLuint uniView;
 GLuint uniModel;
 GLuint uniNormalMatrix;
 GLuint uniLightDirection;
+GLuint uniHalfVector;
 
-glm::vec3 LightDirection = glm::normalize(glm::vec3(1, 1, 1));
+glm::vec3 LightDirection = glm::normalize(glm::vec3(1, 0.1, 1));
 
 void handleEvent(sf::Event &event)
 {
@@ -123,6 +124,7 @@ void init()
 	      uniModel  = glGetUniformLocation(shaderProgram, "model");
 	      uniNormalMatrix = glGetUniformLocation(shaderProgram, "normalMatrix");
 	      uniLightDirection = glGetUniformLocation(shaderProgram, "LightDirection");
+	      uniHalfVector = glGetUniformLocation(shaderProgram, "HalfVector");
 	GLint uniAmbient = glGetUniformLocation(shaderProgram, "Ambient");
 
 	glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -187,6 +189,10 @@ void update(float dt)
 
 	glm::vec3 lightDir = glm::mat3(view) * LightDirection;
 	glUniform3fv(uniLightDirection, 1, glm::value_ptr(lightDir));
+
+	glm::vec3 cameraDir(0, 0, 1);
+	glm::vec3 halfVector = glm::normalize(cameraDir + lightDir);
+	glUniform3fv(uniHalfVector, 1, glm::value_ptr(halfVector));
 }
 
 void pushNormalMatrix()
