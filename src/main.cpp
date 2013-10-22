@@ -81,6 +81,7 @@ glm::mat4 view;
 glm::mat4 model;
 GLuint uniView;
 GLuint uniModel;
+GLuint uniNormalMatrix;
 
 void handleEvent(sf::Event &event)
 {
@@ -117,6 +118,7 @@ void init()
 	GLint uniProj   = glGetUniformLocation(shaderProgram, "projection");
 	      uniView   = glGetUniformLocation(shaderProgram, "view");
 	      uniModel  = glGetUniformLocation(shaderProgram, "model");
+	      uniNormalMatrix = glGetUniformLocation(shaderProgram, "normalMatrix");
 	GLint uniAmbient = glGetUniformLocation(shaderProgram, "Ambient");
 
 	glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -180,6 +182,12 @@ void update(float dt)
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 }
 
+void pushNormalMatrix()
+{
+	glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(view * model)));
+	glUniformMatrix3fv(uniNormalMatrix, 1, GL_FALSE, glm::value_ptr(normalMatrix));
+}
+
 void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -187,11 +195,13 @@ void render()
 	model = glm::mat4();
 	glBindVertexArray(floor_VAO);
 	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+	pushNormalMatrix();
 	glDrawArrays(GL_QUADS, 0, 4);
 
 	model = glm::rotate(model, gameTime*50, glm::vec3(-0.6, 1, 0));
 	glBindVertexArray(cube_VAO);
 	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+	pushNormalMatrix();
 	glDrawArrays(GL_QUADS, 0, 24);
 }
 
