@@ -15,4 +15,5 @@ target_link_libraries(
 	opengl-demo
 	sfml-window sfml-system
 	GL GLEW
+	assimp
 )
