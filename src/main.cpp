@@ -59,18 +59,8 @@ GLfloat cubeVertices[] {
 	 1.0, -1.0, -1.0,		0.0, 1.0, 0.0,		0.0, -1.0, 0.0,
 };
 
-GLfloat floorVertices[] {
-	-5.0, -2.0, -5.0,		0.5, 0.5, 0.5,		0.0, 1.0, 0.0,
-	-5.0, -2.0,  5.0,		0.5, 0.5, 0.5,		0.0, 1.0, 0.0,
-	 5.0, -2.0,  5.0,		0.5, 0.5, 0.5,		0.0, 1.0, 0.0,
-	 5.0, -2.0, -5.0,		0.5, 0.5, 0.5,		0.0, 1.0, 0.0,
-};
-
 GLuint cube_VAO;
 GLuint cube_VBO;
-
-GLuint floor_VAO;
-GLuint floor_VBO;
 
 GLuint shaderProgram;
 std::unique_ptr<Shader> vertexShader;
@@ -151,26 +141,6 @@ void init()
 	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE,
 		9 * sizeof(GLfloat), (void *) (6 * sizeof(GLfloat)));
 
-	/** FLOOR **/
-	glGenVertexArrays(1, &floor_VAO);
-	glGenBuffers(1, &floor_VBO);
-
-	glBindVertexArray(floor_VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, floor_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(floorVertices), floorVertices, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(posAttrib);
-	glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE,
-		9 * sizeof(GLfloat), 0);
-
-	glEnableVertexAttribArray(colAttrib);
-	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE,
-		9 * sizeof(GLfloat), (void *) (3 * sizeof(GLfloat)));
-
-	glEnableVertexAttribArray(normalAttrib);
-	glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE,
-		9 * sizeof(GLfloat), (void *) (6 * sizeof(GLfloat)));
-
 	projection = glm::perspective(80.0f, (float) WIDTH / HEIGHT, 0.1f, 50.0f);
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -206,11 +176,6 @@ void render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	model = glm::mat4();
-	glBindVertexArray(floor_VAO);
-	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
-	pushNormalMatrix();
-	glDrawArrays(GL_QUADS, 0, 4);
-
 	model = glm::rotate(model, gameTime*50, glm::vec3(-0.6, 1, 0));
 	glBindVertexArray(cube_VAO);
 	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
