@@ -161,8 +161,8 @@ void update(float dt)
 	gameTime += dt;
 
 	view = glm::mat4();
-	view = glm::translate(view, -glm::vec3(0, 0, 4));
-	view = glm::rotate(view, gameTime*-10, glm::vec3(0, 1, 0));
+	view = glm::translate(view, -glm::vec3(0, 0.5, 4.7));
+	view = glm::rotate(view, gameTime*-20, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
 	glm::vec3 lightDir = glm::mat3(view) * LightDirection;
@@ -184,6 +184,7 @@ void render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(0, 1, 0));
 	model = glm::rotate(model, gameTime*50, glm::vec3(-0.6, 1, 0));
 	glBindVertexArray(cube_VAO);
 	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
