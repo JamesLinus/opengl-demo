@@ -3,6 +3,8 @@
 
 #include "Shader.hpp"
 
+#include "Model.hpp"
+
 #include <SFML/Window.hpp>
 
 #include <glm/glm.hpp>
@@ -12,6 +14,7 @@
 
 #include <memory>
 #include <iostream>
+#include <map>
 
 constexpr int WIDTH  = 800,
               HEIGHT = 600;
@@ -76,6 +79,8 @@ GLuint uniLightDirection;
 GLuint uniHalfVector;
 
 glm::vec3 LightDirection = glm::normalize(glm::vec3(1, 0.1, 1));
+
+std::map<std::string, std::unique_ptr<Model>> models;
 
 void handleEvent(sf::Event &event)
 {
@@ -181,6 +186,12 @@ void render()
 	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
 	pushNormalMatrix();
 	glDrawArrays(GL_QUADS, 0, 24);
+
+	model = glm::mat4();
+	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+	pushNormalMatrix();
+	for (auto &model : models)
+		model.second->render();
 }
 
 int main()
