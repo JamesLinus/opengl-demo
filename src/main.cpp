@@ -151,6 +151,9 @@ void init()
 
 	/** Lighting **/
 	glUniform3f(uniAmbient, 0.2, 0.2, 0.4);
+
+	/** Models **/
+	models["world"] = std::unique_ptr<Model>(new Model("../res/world.obj", shaderProgram));
 }
 
 void update(float dt)
