@@ -33,6 +33,7 @@ glm::mat4 view;
 glm::mat4 model;
 GLuint uniView;
 GLuint uniModel;
+GLuint uniProj;
 GLuint uniNormalMatrix;
 GLuint uniLightDirection;
 GLuint uniLightPosition;
@@ -53,6 +54,12 @@ void handleEvent(sf::Event &event)
 		default: break;
 		}
 		break;
+	case sf::Event::Resized:
+		std::cout << "Resized to " << event.size.width << ", " << event.size.height << std::endl;
+		projection = glm::perspective(80.0f, (float) event.size.width / event.size.height, 0.1f, 50.0f);
+		glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
+		glViewport(0, 0, event.size.width, event.size.height);
+		break;
 	default: break;
 	}
 }
@@ -71,9 +78,9 @@ void init()
 	glLinkProgram(shaderProgram);
 	glUseProgram(shaderProgram);
 
-	GLint uniProj   = glGetUniformLocation(shaderProgram, "projection");
 	      uniView   = glGetUniformLocation(shaderProgram, "view");
 	      uniModel  = glGetUniformLocation(shaderProgram, "model");
+	      uniProj   = glGetUniformLocation(shaderProgram, "projection");
 	      uniNormalMatrix = glGetUniformLocation(shaderProgram, "normalMatrix");
 	      uniLightDirection = glGetUniformLocation(shaderProgram, "LightDirection");
 	      uniLightPosition = glGetUniformLocation(shaderProgram, "LightPosition");
@@ -137,7 +144,7 @@ int main()
 	contextSettings.depthBits = 24;
 	contextSettings.antialiasingLevel = 8;
 
-	window.create(sf::VideoMode(WIDTH, HEIGHT), "OpenGL Demo", sf::Style::Close, contextSettings);
+	window.create(sf::VideoMode(WIDTH, HEIGHT), "OpenGL Demo", sf::Style::Default, contextSettings);
 	window.setVerticalSyncEnabled(true);
 
 	contextSettings = window.getSettings();
