@@ -147,7 +147,7 @@ void init()
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
 
 	/** Lighting **/
-	glUniform3f(uniAmbient, 0.2, 0.2, 0.4);
+	glUniform3f(uniAmbient, 0.1, 0.1, 0.2);
 
 	/** Models **/
 	models["world"] = std::unique_ptr<Model>(new Model("../res/world.obj", shaderProgram));
