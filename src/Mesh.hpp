@@ -8,7 +8,7 @@
 class Mesh
 {
 public:
-	Mesh(const aiMesh *, GLuint shaderProgram);
+	Mesh(const aiMesh *mesh, const GLuint *textures, GLuint shaderProgram);
 	~Mesh();
 
 	void render() const;
@@ -16,6 +16,8 @@ public:
 	GLuint VAO;
 	GLuint VBO;
 	GLuint EBO;
+
+	GLuint texture;
 
 	size_t numFaces;
 	size_t numVertices;

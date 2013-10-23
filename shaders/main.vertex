@@ -3,6 +3,7 @@
 in vec3 position;
 in vec3 color;
 in vec3 normal;
+in vec2 textureCoords;
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -12,10 +13,13 @@ uniform mat3 normalMatrix;
 
 out vec3 Color;
 out vec3 Normal;
+out vec2 TextureCoords;
 
 void main()
 {
 	Normal = normalize(normalMatrix * normal);
 	Color = color;
+	TextureCoords = textureCoords;
+
 	gl_Position = projection * view * model * vec4(position, 1.0);
 }

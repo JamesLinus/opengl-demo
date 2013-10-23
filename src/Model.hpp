@@ -19,4 +19,5 @@ public:
 
 private:
 	std::vector<std::unique_ptr<Mesh>> meshes;
+	GLuint *textures;
 };
