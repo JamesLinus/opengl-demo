@@ -13,7 +13,7 @@ add_executable( opengl-demo ${SRC_FILES} ${INC_FILES} )
 
 target_link_libraries(
 	opengl-demo
-	sfml-window sfml-system
+	sfml-graphics sfml-window sfml-system
 	GL GLEW
 	assimp
 )
