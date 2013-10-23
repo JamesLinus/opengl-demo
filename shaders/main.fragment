@@ -1,6 +1,5 @@
 #version 130
 
-in vec3 Color;
 in vec3 Normal;
 in vec2 TextureCoords;
 
@@ -27,7 +26,7 @@ void main()
 	vec3 scatteredLight = Ambient + LightColor * diffuse;
 	vec3 reflectedLight = LightColor * specular * 0.5;
 
-	vec4 color = texture2D(texture, TextureCoords) * vec4(Color, 1.0);
+	vec4 color = texture2D(texture, TextureCoords);
 	vec3 rgb = min(color.rgb * scatteredLight + reflectedLight, vec3(1.0));
 	gl_FragColor = vec4(rgb, 1.0);
 }
