@@ -42,6 +42,8 @@ Model::Model(const std::string &filename, GLuint shaderProgram)
 
 	for (size_t i = 0; i < scene->mNumMeshes; i++)
 		meshes.push_back(std::unique_ptr<Mesh>(new Mesh(scene->mMeshes[i], textures, shaderProgram)));
+
+	uniModel = glGetUniformLocation(shaderProgram, "model");
 }
 
 Model::~Model()
@@ -51,6 +53,8 @@ Model::~Model()
 
 void Model::render() const
 {
+	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+
 	for (auto &mesh : meshes) {
 		mesh->render();
 	}
