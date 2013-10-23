@@ -1,0 +1,24 @@
+#version 130
+
+in vec3 position;
+in vec3 normal;
+in vec2 textureCoords;
+
+uniform mat4 projection;
+uniform mat4 view;
+uniform mat4 model;
+
+uniform mat3 normalMatrix;
+
+out vec4 Position;
+out vec3 Normal;
+out vec2 TextureCoords;
+
+void main()
+{
+	Position = view * model * vec4(position, 1.0);
+	Normal = normalize(normalMatrix * normal);
+	TextureCoords = textureCoords;
+
+	gl_Position = projection * view * model * vec4(position, 1.0);
+}

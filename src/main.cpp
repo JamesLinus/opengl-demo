@@ -76,6 +76,7 @@ GLuint uniView;
 GLuint uniModel;
 GLuint uniNormalMatrix;
 GLuint uniLightDirection;
+GLuint uniLightPosition;
 GLuint uniHalfVector;
 
 glm::vec3 LightDirection = glm::normalize(glm::vec3(1, 0.1, 1));
@@ -102,8 +103,8 @@ void init()
 	vertexShader = std::unique_ptr<Shader>(new Shader(Shader::Vertex));
 	fragmentShader = std::unique_ptr<Shader>(new Shader(Shader::Fragment));
 
-	vertexShader->loadFromFile("../shaders/main.vertex");
-	fragmentShader->loadFromFile("../shaders/main.fragment");
+	vertexShader->loadFromFile("../shaders/pointlight.vertex");
+	fragmentShader->loadFromFile("../shaders/pointlight.fragment");
 
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, *vertexShader);
@@ -118,6 +119,7 @@ void init()
 	      uniModel  = glGetUniformLocation(shaderProgram, "model");
 	      uniNormalMatrix = glGetUniformLocation(shaderProgram, "normalMatrix");
 	      uniLightDirection = glGetUniformLocation(shaderProgram, "LightDirection");
+	      uniLightPosition = glGetUniformLocation(shaderProgram, "LightPosition");
 	      uniHalfVector = glGetUniformLocation(shaderProgram, "HalfVector");
 	GLint uniAmbient = glGetUniformLocation(shaderProgram, "Ambient");
 
@@ -162,6 +164,9 @@ void update(float dt)
 
 	glm::vec3 lightDir = glm::mat3(view) * LightDirection;
 	glUniform3fv(uniLightDirection, 1, glm::value_ptr(lightDir));
+
+	glm::vec3 lightPos = glm::vec3(view * glm::vec4(0, -1, 0, 1));
+	glUniform3fv(uniLightPosition, 1, glm::value_ptr(lightPos));
 
 	glm::vec3 cameraDir(0, 0, 1);
 	glm::vec3 halfVector = glm::normalize(cameraDir + lightDir);
