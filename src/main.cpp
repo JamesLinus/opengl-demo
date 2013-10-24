@@ -43,6 +43,13 @@ glm::vec3 LightDirection = glm::normalize(glm::vec3(1, 0.1, 1));
 
 std::map<std::string, std::unique_ptr<Model>> models;
 
+void setPerspective()
+{
+	projection = glm::perspective(80.0f, (float) window.getSize().x / window.getSize().y, 0.5f, 25.0f);
+	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
+	glViewport(0, 0, window.getSize().x, window.getSize().y);
+}
+
 void handleEvent(sf::Event &event)
 {
 	switch (event.type) {
@@ -56,9 +63,7 @@ void handleEvent(sf::Event &event)
 		break;
 	case sf::Event::Resized:
 		std::cout << "Resized to " << event.size.width << ", " << event.size.height << std::endl;
-		projection = glm::perspective(80.0f, (float) event.size.width / event.size.height, 0.1f, 50.0f);
-		glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
-		glViewport(0, 0, event.size.width, event.size.height);
+		setPerspective();
 		break;
 	default: break;
 	}
@@ -91,8 +96,7 @@ void init()
 
 	glEnable(GL_DEPTH_TEST);
 
-	projection = glm::perspective(80.0f, (float) WIDTH / HEIGHT, 0.1f, 50.0f);
-	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
+	setPerspective();
 
 	/** Lighting **/
 	glUniform3f(uniAmbient, 0.1, 0.1, 0.2);
