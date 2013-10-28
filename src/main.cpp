@@ -25,8 +25,6 @@ sf::Window window;
 float gameTime;
 
 GLuint shaderProgram;
-std::unique_ptr<Shader> vertexShader;
-std::unique_ptr<Shader> fragmentShader;
 
 glm::mat4 projection;
 glm::mat4 view;
@@ -71,15 +69,15 @@ void handleEvent(sf::Event &event)
 
 void init()
 {
-	vertexShader = std::unique_ptr<Shader>(new Shader(Shader::Vertex));
-	fragmentShader = std::unique_ptr<Shader>(new Shader(Shader::Fragment));
+	Shader vertexShader(Shader::Vertex);
+	Shader fragmentShader(Shader::Fragment);
 
-	vertexShader->loadFromFile("../shaders/pointlight.vertex");
-	fragmentShader->loadFromFile("../shaders/pointlight.fragment");
+	vertexShader.loadFromFile("../shaders/pointlight.vertex");
+	fragmentShader.loadFromFile("../shaders/pointlight.fragment");
 
 	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, *vertexShader);
-	glAttachShader(shaderProgram, *fragmentShader);
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
 	glUseProgram(shaderProgram);
 
