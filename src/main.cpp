@@ -169,7 +169,8 @@ void render()
 	glUniformMatrix4fv(glGetUniformLocation(shadowProgram, "lightview"), 1, GL_FALSE, glm::value_ptr(lightview));
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	setPerspective();
+	glm::mat4 lightproj = glm::frustum<float>(-1, 1, -1, 1, 1, 25);
+	glUniformMatrix4fv(glGetUniformLocation(shadowProgram, "projection"), 1, GL_FALSE, glm::value_ptr(lightproj));
 	glViewport(0, 0, 1024, 1024);
 	// glUniform1i(glGetUniformLocation(shaderProgram, "texture"), 0);
 
@@ -190,6 +191,7 @@ void render()
 
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightview"), 1, GL_FALSE, glm::value_ptr(lightview));
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightprojection"), 1, GL_FALSE, glm::value_ptr(lightproj));
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, shadowTexture);
