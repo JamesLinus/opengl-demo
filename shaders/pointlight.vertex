@@ -7,6 +7,7 @@ in vec2 textureCoords;
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
+uniform mat4 lightview;
 
 uniform mat3 normalMatrix;
 
@@ -14,11 +15,23 @@ out vec4 Position;
 out vec3 Normal;
 out vec2 TextureCoords;
 
+out vec4 shadowCoords;
+
 void main()
 {
 	Position = view * model * vec4(position, 1.0);
 	Normal = normalize(normalMatrix * normal);
 	TextureCoords = textureCoords;
+
+	mat4 bias = mat4(
+		vec4(0.5, 0.0, 0.0, 0.0),
+		vec4(0.0, 0.5, 0.0, 0.0),
+		vec4(0.0, 0.0, 0.5, 0.0),
+		vec4(0.5, 0.5, 0.5, 1.0)
+	);
+
+	shadowCoords = bias * projection * lightview * model * vec4(position, 1.0);
+	shadowCoords.z -= 0.01;
 
 	gl_Position = projection * view * model * vec4(position, 1.0);
 }

@@ -53,7 +53,7 @@ Model::~Model()
 
 void Model::render() const
 {
-	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+	// glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 
 	for (auto &mesh : meshes) {
 		mesh->render();
