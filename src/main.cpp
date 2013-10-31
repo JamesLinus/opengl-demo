@@ -237,15 +237,15 @@ int main()
 	sf::Clock clock;
 
 	while (window.isOpen()) {
-		sf::Event event;
-		while (window.pollEvent(event)) {
-			handleEvent(event);
-		}
-
 		update(clock.restart().asSeconds());
 
 		render();
 		window.display();
+
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			handleEvent(event);
+		}
 	}
 
 	return 0;
