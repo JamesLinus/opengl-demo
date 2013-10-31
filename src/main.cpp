@@ -11,6 +11,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 #include <memory>
 #include <iostream>
@@ -29,6 +30,9 @@ GLuint shaderProgram;
 glm::mat4 projection;
 glm::mat4 view;
 glm::mat4 model;
+
+glm::mat4 lightview;
+
 GLuint uniView;
 GLuint uniModel;
 GLuint uniProj;
@@ -141,15 +145,20 @@ void update(float dt)
 {
 	gameTime += dt;
 
+	glm::vec3 lightPosWorld = glm::vec3(4.5, 0, 0);
+	lightPosWorld = glm::rotate(lightPosWorld, gameTime*-20, glm::vec3(0, 1, 0));
+
 	view = glm::mat4();
 	view = glm::translate(view, -glm::vec3(0, 0.5, 5.0));
-	// view = glm::rotate(view, gameTime*-20, glm::vec3(0, 1, 0));
+	view = glm::rotate(view, gameTime*-5, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+
+	lightview = glm::lookAt(lightPosWorld, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 
 	glm::vec3 lightDir = glm::mat3(view) * LightDirection;
 	glUniform3fv(uniLightDirection, 1, glm::value_ptr(lightDir));
 
-	glm::vec3 lightPos = glm::vec3(view * glm::vec4(0, -1, 0, 1));
+	glm::vec3 lightPos = glm::vec3(view * glm::vec4(lightPosWorld, 1.0));
 	glUniform3fv(uniLightPosition, 1, glm::value_ptr(lightPos));
 
 	glm::vec3 cameraDir(0, 0, 1);
@@ -165,7 +174,6 @@ void update(float dt)
 void render()
 {
 	glUseProgram(shadowProgram);
-	glm::mat4 lightview = glm::rotate(view, gameTime*-20, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(glGetUniformLocation(shadowProgram, "lightview"), 1, GL_FALSE, glm::value_ptr(lightview));
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
