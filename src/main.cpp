@@ -53,7 +53,7 @@ std::map<std::string, std::unique_ptr<Model>> models;
 
 void setPerspective()
 {
-	projection = glm::perspective(80.0f, (float) window.getSize().x / window.getSize().y, 0.5f, 25.0f);
+	projection = glm::perspective(85.0f, (float) window.getSize().x / window.getSize().y, 1.5f, 25.0f);
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
 	glViewport(0, 0, window.getSize().x, window.getSize().y);
 }
