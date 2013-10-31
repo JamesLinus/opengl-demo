@@ -71,7 +71,6 @@ void handleEvent(sf::Event &event)
 		break;
 	case sf::Event::Resized:
 		std::cout << "Resized to " << event.size.width << ", " << event.size.height << std::endl;
-		setPerspective();
 		break;
 	default: break;
 	}
@@ -111,8 +110,6 @@ void init()
 	GLint uniAmbient = glGetUniformLocation(shaderProgram, "Ambient");
 
 	glEnable(GL_DEPTH_TEST);
-
-	setPerspective();
 
 	/** Lighting **/
 	glUniform3f(uniAmbient, 0.1, 0.1, 0.2);
