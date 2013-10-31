@@ -110,8 +110,6 @@ void init()
 	      uniHalfVector = glGetUniformLocation(shaderProgram, "HalfVector");
 	GLint uniAmbient = glGetUniformLocation(shaderProgram, "Ambient");
 
-	glClearColor(0.1, 0.1, 0.1, 1.0);
-
 	glEnable(GL_DEPTH_TEST);
 
 	setPerspective();
