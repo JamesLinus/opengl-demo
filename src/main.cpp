@@ -22,6 +22,8 @@ constexpr int WIDTH  = 800,
 
 constexpr double PiOver180 = 3.141592653589793238/180;
 
+constexpr int shadowMapSize = 1024;
+
 sf::Window window;
 float gameTime;
 
@@ -123,7 +125,7 @@ void init()
 
 	glGenTextures(1, &shadowTexture);
 	glBindTexture(GL_TEXTURE_2D, shadowTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, shadowMapSize, shadowMapSize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
@@ -179,7 +181,7 @@ void render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glm::mat4 lightproj = glm::frustum<float>(-1, 1, -1, 1, 1, 25);
 	glUniformMatrix4fv(glGetUniformLocation(shadowProgram, "projection"), 1, GL_FALSE, glm::value_ptr(lightproj));
-	glViewport(0, 0, 1024, 1024);
+	glViewport(0, 0, shadowMapSize, shadowMapSize);
 	// glUniform1i(glGetUniformLocation(shaderProgram, "texture"), 0);
 
 	for (auto &model : models) {
