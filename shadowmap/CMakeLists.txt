@@ -3,7 +3,7 @@ file( GLOB INC_FILES "src/*.hpp" )
 
 include_directories( "src" )
 
-add_executable( shadowmap ${SRC_FILES} ${INC_FILES} )
+add_executable( shadowmap ${SRC_FILES} ${INC_FILES} ${COMMON_SOURCE_FILES} ${COMMON_INCLUDE_FILES} )
 
 target_link_libraries(
 	shadowmap

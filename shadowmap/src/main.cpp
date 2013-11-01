@@ -1,11 +1,10 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-#include "Shader.hpp"
-
 #include "Model.hpp"
-
 #include "ResourceManager.hpp"
+
+#include <Shader.hpp>
 
 #include <SFML/Window.hpp>
 
