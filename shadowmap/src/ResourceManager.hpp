@@ -9,6 +9,8 @@
 namespace ResourceManager
 {
 	GLuint aquireTexture(std::string name);
+	void setSearchPath(const std::string &search_path);
 
 	static std::map<std::string, GLuint> textures;
+	static std::string search_path;
 }

@@ -5,6 +5,8 @@
 
 #include "Model.hpp"
 
+#include "ResourceManager.hpp"
+
 #include <SFML/Window.hpp>
 
 #include <glm/glm.hpp>
@@ -12,6 +14,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+
+#include <libgen.h>
 
 #include <memory>
 #include <iostream>
@@ -23,6 +27,8 @@ constexpr int WIDTH  = 800,
 constexpr double PiOver180 = 3.141592653589793238/180;
 
 constexpr int shadowMapSize = 1024;
+
+std::string search_path {"."};
 
 sf::Window window;
 float gameTime;
@@ -81,8 +87,8 @@ void init()
 	Shader vertexShader(Shader::Vertex);
 	Shader fragmentShader(Shader::Fragment);
 
-	vertexShader.loadFromFile("../shaders/pointlight.vertex");
-	fragmentShader.loadFromFile("../shaders/pointlight.fragment");
+	vertexShader.loadFromFile(search_path +"/shaders/pointlight.vertex");
+	fragmentShader.loadFromFile(search_path +"/shaders/pointlight.fragment");
 
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
@@ -92,8 +98,8 @@ void init()
 
 	Shader shadowVertexShader(Shader::Vertex);
 	Shader shadowFragmentShader(Shader::Fragment);
-	shadowVertexShader.loadFromFile("../shaders/shadowmap.vertex");
-	shadowFragmentShader.loadFromFile("../shaders/shadowmap.fragment");
+	shadowVertexShader.loadFromFile(search_path +"/shaders/shadowmap.vertex");
+	shadowFragmentShader.loadFromFile(search_path +"/shaders/shadowmap.fragment");
 	shadowProgram = glCreateProgram();
 	glAttachShader(shadowProgram, shadowVertexShader);
 	glAttachShader(shadowProgram, shadowFragmentShader);
@@ -115,8 +121,8 @@ void init()
 	glUniform3f(uniAmbient, 0.1, 0.1, 0.2);
 
 	/** Models **/
-	models["world"] = std::unique_ptr<Model>(new Model("../res/world.obj", shaderProgram));
-	models["teapot"] = std::unique_ptr<Model>(new Model("../res/teapot.obj", shaderProgram));
+	models["world"] = std::unique_ptr<Model>(new Model(search_path +"/res/world.obj", shaderProgram));
+	models["teapot"] = std::unique_ptr<Model>(new Model(search_path +"/res/teapot.obj", shaderProgram));
 
 	glGenTextures(1, &shadowTexture);
 	glBindTexture(GL_TEXTURE_2D, shadowTexture);
@@ -211,8 +217,11 @@ void render()
 	}
 }
 
-int main()
+int main(int argc, char **argv)
 {
+	search_path = {dirname(argv[0])};
+	ResourceManager::setSearchPath(search_path);
+
 	sf::ContextSettings contextSettings;
 	contextSettings.depthBits = 24;
 	contextSettings.antialiasingLevel = 8;
