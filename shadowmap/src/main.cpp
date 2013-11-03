@@ -1,8 +1,10 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
-#include "Model.hpp"
 #include <ResourceManager.hpp>
+
+#include <AssimpLoader.hpp>
+#include <GLModel.hpp>
 
 #include <Shader.hpp>
 
@@ -54,7 +56,7 @@ GLuint shadowProgram;
 
 glm::vec3 LightDirection = glm::normalize(glm::vec3(1, 0.1, 1));
 
-std::map<std::string, std::unique_ptr<Model>> models;
+std::map<std::string, std::unique_ptr<GLModel>> models;
 
 void setPerspective()
 {
@@ -120,8 +122,8 @@ void init()
 	glUniform3f(uniAmbient, 0.1, 0.1, 0.2);
 
 	/** Models **/
-	models["world"] = std::unique_ptr<Model>(new Model(search_path +"res/world.obj", shaderProgram));
-	models["teapot"] = std::unique_ptr<Model>(new Model(search_path +"res/teapot.obj", shaderProgram));
+	models["world"] = std::unique_ptr<GLModel>(new GLModel(AssimpLoader::loadModelFromFile(search_path +"res/world.obj")));
+	models["teapot"] = std::unique_ptr<GLModel>(new GLModel(AssimpLoader::loadModelFromFile(search_path +"res/teapot.obj")));
 
 	glGenTextures(1, &shadowTexture);
 	glBindTexture(GL_TEXTURE_2D, shadowTexture);
@@ -167,7 +169,7 @@ void update(float dt)
 	glm::vec3 halfVector = glm::normalize(cameraDir + lightDir);
 	glUniform3fv(uniHalfVector, 1, glm::value_ptr(halfVector));
 
-	glm::mat4 &model = models["teapot"]->modelMatrix;
+	glm::mat4 &model = models["teapot"]->model_matrix;
 	model = glm::mat4();
 	model = glm::translate(model, glm::vec3(0, 1, 0));
 	model = glm::rotate(model, gameTime*50, glm::vec3(-0.6, 1, 0));
@@ -185,9 +187,7 @@ void render()
 	// glUniform1i(glGetUniformLocation(shaderProgram, "texture"), 0);
 
 	for (auto &model : models) {
-		// glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(view * model.second->modelMatrix)));
-		// glUniformMatrix3fv(uniNormalMatrix, 1, GL_FALSE, glm::value_ptr(normalMatrix));
-		glUniformMatrix4fv(glGetUniformLocation(shadowProgram, "model"), 1, GL_FALSE, glm::value_ptr(model.second->modelMatrix));
+		glUniformMatrix4fv(glGetUniformLocation(shadowProgram, "model"), 1, GL_FALSE, glm::value_ptr(model.second->model_matrix));
 		model.second->render();
 	}
 	// return;
@@ -209,9 +209,9 @@ void render()
 	glActiveTexture(GL_TEXTURE0);
 
 	for (auto &model : models) {
-		glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(view * model.second->modelMatrix)));
+		glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(view * model.second->model_matrix)));
 		glUniformMatrix3fv(uniNormalMatrix, 1, GL_FALSE, glm::value_ptr(normalMatrix));
-		glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model.second->modelMatrix));
+		glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model.second->model_matrix));
 		model.second->render();
 	}
 }
