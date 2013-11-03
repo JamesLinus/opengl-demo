@@ -14,7 +14,7 @@ GLuint aquireTexture(std::string name)
 		glBindTexture(GL_TEXTURE_2D, tex);
 
 		sf::Image image;
-		image.loadFromFile(search_path +"/res/"+ name);
+		image.loadFromFile(search_path +"res/"+ name);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getSize().x, image.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.getPixelsPtr());
 
