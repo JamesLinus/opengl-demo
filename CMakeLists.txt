@@ -8,3 +8,4 @@ file( GLOB COMMON_INCLUDE_FILES "common/include/*.hpp" )
 include_directories( "common/include" )
 
 add_subdirectory( shadowmap )
+add_subdirectory( cubemap )
