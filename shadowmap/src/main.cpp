@@ -2,7 +2,7 @@
 #include <GL/glew.h>
 
 #include "Model.hpp"
-#include "ResourceManager.hpp"
+#include <ResourceManager.hpp>
 
 #include <Shader.hpp>
 

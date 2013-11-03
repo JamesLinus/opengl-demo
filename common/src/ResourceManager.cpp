@@ -1,4 +1,4 @@
-#include "ResourceManager.hpp"
+#include <ResourceManager.hpp>
 
 #include <SFML/Graphics/Image.hpp>
 
