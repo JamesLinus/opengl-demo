@@ -10,3 +10,11 @@ include_directories( "common/include" )
 add_subdirectory( shadowmap )
 add_subdirectory( cubemap )
 add_subdirectory( cubeshadow )
+
+add_custom_target(
+	copyfiles
+	ALL
+	COMMAND ${CMAKE_COMMAND} -E echo "-- Copying common files."
+	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/common/resources" "${CMAKE_CURRENT_BINARY_DIR}/common"
+)
+add_dependencies( copyfiles shadowmap cubemap cubeshadow )
