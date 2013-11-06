@@ -122,8 +122,8 @@ void init()
 	glUniform3f(uniAmbient, 0.1, 0.1, 0.2);
 
 	/** Models **/
-	models["world"] = std::unique_ptr<GLModel>(new GLModel(AssimpLoader::loadModelFromFile(search_path +"res/world.obj")));
-	models["teapot"] = std::unique_ptr<GLModel>(new GLModel(AssimpLoader::loadModelFromFile(search_path +"res/teapot.obj")));
+	models["world"] = std::unique_ptr<GLModel>(new GLModel(AssimpLoader::loadModelFromFile(search_path +"models/world.obj")));
+	models["teapot"] = std::unique_ptr<GLModel>(new GLModel(AssimpLoader::loadModelFromFile(search_path +"models/teapot.obj")));
 
 	glGenTextures(1, &shadowTexture);
 	glBindTexture(GL_TEXTURE_2D, shadowTexture);
