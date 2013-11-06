@@ -9,3 +9,4 @@ include_directories( "common/include" )
 
 add_subdirectory( shadowmap )
 add_subdirectory( cubemap )
+add_subdirectory( cubeshadow )
