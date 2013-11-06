@@ -12,9 +12,9 @@ target_link_libraries(
 	assimp
 )
 
-add_custom_command(
-	TARGET shadowmap
-	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E echo "Copying stuff!"
+add_custom_target(
+	copyfiles_shadowmap
+	ALL
+	COMMAND ${CMAKE_COMMAND} -E echo "-- Copying shadowmap files."
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/resources" $<TARGET_FILE_DIR:shadowmap>
 )

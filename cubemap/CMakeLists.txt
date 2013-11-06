@@ -12,9 +12,9 @@ target_link_libraries(
 	assimp
 )
 
-add_custom_command(
-	TARGET cubemap
-	POST_BUILD
-	COMMAND ${CMAKE_COMMAND} -E echo "Copying stuff!"
+add_custom_target(
+	copyfiles_cubemap
+	ALL
+	COMMAND ${CMAKE_COMMAND} -E echo "-- Copying cubemap files."
 	COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/resources" $<TARGET_FILE_DIR:cubemap>
 )
