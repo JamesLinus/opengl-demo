@@ -166,7 +166,7 @@ void init()
 
 	projection = glm::perspective(90.f, 800.f/600.f, 1.f, 20.f);
 
-	model_teapot = new GLModel(AssimpLoader::loadModelFromFile(search_path +"models/teapot.obj"));
+	model_teapot = new GLModel(AssimpLoader::loadModelFromFile(search_path +"../common/models/teapot.obj"));
 }
 
 void update(float dt)
