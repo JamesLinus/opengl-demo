@@ -14,7 +14,7 @@ GLuint aquireTexture(std::string name)
 		glBindTexture(GL_TEXTURE_2D, tex);
 
 		sf::Image image;
-		if ( ! image.loadFromFile(search_path +"res/"+ name)) {
+		if ( ! image.loadFromFile(search_path +"textures/"+ name)) {
 			if ( ! image.loadFromFile(search_path +"../common/textures/"+ name)) {
 				return -1;
 			}
