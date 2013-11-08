@@ -32,6 +32,7 @@ void handleEvent(sf::Event &event)
 
 void init()
 {
+	glEnable(GL_DEPTH_TEST);
 }
 
 void update(float dt)
@@ -41,7 +42,7 @@ void update(float dt)
 
 void render()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 int main(int argc, char **argv)
