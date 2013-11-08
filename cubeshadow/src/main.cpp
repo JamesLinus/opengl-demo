@@ -1,9 +1,15 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
+#include <Config.hpp>
+#include <Shader.hpp>
 #include <ResourceManager.hpp>
 
 #include <SFML/Window.hpp>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <libgen.h>
 
@@ -14,6 +20,11 @@ std::string search_path;
 
 sf::Window window;
 float gameTime;
+
+GLuint shaderProgram;
+
+GLuint uniProj;
+glm::mat4 projection;
 
 void handleEvent(sf::Event &event)
 {
@@ -33,6 +44,24 @@ void handleEvent(sf::Event &event)
 void init()
 {
 	glEnable(GL_DEPTH_TEST);
+
+	Shader vertexShader(Shader::Vertex);
+	Shader fragmentShader(Shader::Fragment);
+	vertexShader.loadFromFile(search_path +"shaders/main.vertex");
+	fragmentShader.loadFromFile(search_path +"shaders/main.fragment");
+
+	shaderProgram = glCreateProgram();
+	glAttachShader(shaderProgram, vertexShader);
+	glAttachShader(shaderProgram, fragmentShader);
+	glBindAttribLocation(shaderProgram, ATTRIBLOCATION_POSITION, "position");
+	glBindAttribLocation(shaderProgram, ATTRIBLOCATION_NORMAL, "normal");
+	glBindAttribLocation(shaderProgram, ATTRIBLOCATION_TEXCOORD, "texcoord");
+	glLinkProgram(shaderProgram);
+	glUseProgram(shaderProgram);
+
+	uniProj = glGetUniformLocation(shaderProgram, "projection");
+	projection = glm::perspective(85.f, (float) WIDTH/HEIGHT, 1.f, 30.f);
+	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
 }
 
 void update(float dt)
