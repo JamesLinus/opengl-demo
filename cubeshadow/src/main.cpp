@@ -1,9 +1,11 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 
+#include <GLModel.hpp>
 #include <Config.hpp>
 #include <Shader.hpp>
 #include <ResourceManager.hpp>
+#include <AssimpLoader.hpp>
 
 #include <SFML/Window.hpp>
 
@@ -12,6 +14,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <libgen.h>
+
+#include <memory>
+#include <map>
 
 constexpr int WIDTH  = 800,
               HEIGHT = 600;
@@ -25,6 +30,8 @@ GLuint shaderProgram;
 
 GLuint uniProj;
 glm::mat4 projection;
+
+std::map<std::string, std::unique_ptr<GLModel>> models;
 
 void handleEvent(sf::Event &event)
 {
@@ -62,6 +69,8 @@ void init()
 	uniProj = glGetUniformLocation(shaderProgram, "projection");
 	projection = glm::perspective(85.f, (float) WIDTH/HEIGHT, 1.f, 30.f);
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
+
+	models["world"] = std::unique_ptr<GLModel>(new GLModel(AssimpLoader::loadModelFromFile(search_path +"../common/models/world.obj")));
 }
 
 void update(float dt)
@@ -72,6 +81,10 @@ void update(float dt)
 void render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	for (auto &model : models) {
+		model.second->render();
+	}
 }
 
 int main(int argc, char **argv)
