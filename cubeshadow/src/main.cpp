@@ -29,7 +29,9 @@ float gameTime;
 GLuint shaderProgram;
 
 GLuint uniProj;
+GLuint uniView;
 glm::mat4 projection;
+glm::mat4 view;
 
 std::map<std::string, std::unique_ptr<GLModel>> models;
 
@@ -67,6 +69,7 @@ void init()
 	glUseProgram(shaderProgram);
 
 	uniProj = glGetUniformLocation(shaderProgram, "projection");
+	uniView = glGetUniformLocation(shaderProgram, "view");
 	projection = glm::perspective(85.f, (float) WIDTH/HEIGHT, 1.f, 30.f);
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -76,6 +79,10 @@ void init()
 void update(float dt)
 {
 	gameTime += dt;
+
+	view = glm::mat4();
+	view = glm::translate(view, -glm::vec3(0, 0, 5));
+	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 }
 
 void render()
