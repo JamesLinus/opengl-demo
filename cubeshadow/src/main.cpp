@@ -21,6 +21,8 @@
 constexpr int WIDTH  = 800,
               HEIGHT = 600;
 
+constexpr int shadowTextureSize = 512;
+
 std::string search_path;
 
 sf::Window window;
@@ -32,6 +34,9 @@ GLuint uniProj;
 GLuint uniView;
 glm::mat4 projection;
 glm::mat4 view;
+
+GLuint FBO;
+GLuint shadowCubeTexture;
 
 std::map<std::string, std::unique_ptr<GLModel>> models;
 
@@ -74,6 +79,26 @@ void init()
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
 
 	models["world"] = std::unique_ptr<GLModel>(new GLModel(AssimpLoader::loadModelFromFile(search_path +"../common/models/world.obj")));
+
+	// Set up framebuffers
+	glGenTextures(1, &shadowCubeTexture);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, shadowCubeTexture);
+	for (size_t i = 0; i < 6; i++)
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT32, shadowTextureSize, shadowTextureSize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float color[] = { 0, 0, 0, 0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glGenFramebuffers(1, &FBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+	glDrawBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void update(float dt)
