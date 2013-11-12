@@ -29,6 +29,7 @@ sf::Window window;
 float gameTime;
 
 GLuint shaderProgram;
+GLuint programShadow;
 
 GLuint uniProj;
 GLuint uniView;
@@ -59,6 +60,7 @@ void init()
 {
 	glEnable(GL_DEPTH_TEST);
 
+	{
 	Shader vertexShader(Shader::Vertex);
 	Shader fragmentShader(Shader::Fragment);
 	vertexShader.loadFromFile(search_path +"shaders/main.vertex");
@@ -72,6 +74,20 @@ void init()
 	glBindAttribLocation(shaderProgram, ATTRIBLOCATION_TEXCOORD, "texcoord");
 	glLinkProgram(shaderProgram);
 	glUseProgram(shaderProgram);
+	}
+
+	{
+	Shader vertexShader(Shader::Vertex);
+	Shader fragmentShader(Shader::Fragment);
+	vertexShader.loadFromFile(search_path +"shaders/shadow.vertex");
+	fragmentShader.loadFromFile(search_path +"shaders/shadow.fragment");
+
+	programShadow = glCreateProgram();
+	glAttachShader(programShadow, vertexShader);
+	glAttachShader(programShadow, fragmentShader);
+	glBindAttribLocation(programShadow, ATTRIBLOCATION_POSITION, "position");
+	glLinkProgram(programShadow);
+	}
 
 	uniProj = glGetUniformLocation(shaderProgram, "projection");
 	uniView = glGetUniformLocation(shaderProgram, "view");
