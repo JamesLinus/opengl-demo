@@ -36,6 +36,9 @@ GLuint uniView;
 glm::mat4 projection;
 glm::mat4 view;
 
+glm::mat4 shadowProjection;
+glm::mat4 shadowViews[6];
+
 GLuint FBO;
 GLuint shadowCubeTexture;
 
@@ -115,6 +118,13 @@ void init()
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
 	glDrawBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	shadowProjection = glm::frustum(-1, 1, -1, 1, 1, 50);
+	shadowViews[0] = glm::rotate(shadowViews[0], 90.f, glm::vec3(0, 1, 0));
+	shadowViews[1] = glm::rotate(shadowViews[1], -90.f, glm::vec3(0, 1, 0));
+	shadowViews[2] = glm::rotate(shadowViews[2], -90.f, glm::vec3(1, 0, 0));
+	shadowViews[3] = glm::rotate(shadowViews[3], 90.f, glm::vec3(1, 0, 0));
+	shadowViews[4] = glm::rotate(shadowViews[4], 180.f, glm::vec3(0, 1, 0));
 }
 
 void update(float dt)
