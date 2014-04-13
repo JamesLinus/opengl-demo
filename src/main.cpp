@@ -375,10 +375,106 @@ int main()
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 
-	glClearColor(0.2, 0.2, 0.2, 1.0);
+	Model model_cube = import_model("../res/cube.dae");
+
+	std::cout << "COMPILING STUFF!" << std::endl;
+	GLuint vertex_shader = compileShader("../shaders/main.vertex", GL_VERTEX_SHADER);
+	GLuint fragment_shader = compileShader("../shaders/main.fragment", GL_FRAGMENT_SHADER);
+	GLuint program_main = glCreateProgram();
+	glAttachShader(program_main, vertex_shader);
+	glAttachShader(program_main, fragment_shader);
+
+	glBindFragDataLocation(program_main, 0, "outColor");
+	glBindAttribLocation(program_main, 0, "position");
+	// glBindAttribLocation(program_main, 1, "normal");
+	// glBindAttribLocation(program_main, 2, "texcoord");
+	glBindAttribLocation(program_main, 3, "boneIDs");
+	glBindAttribLocation(program_main, 4, "weights");
+
+	glLinkProgram(program_main);
+	glUseProgram(program_main);
+
+	GLuint BONE_LOCATIONS[2];
+	for (int i = 0; i < 2; ++i) {
+		std::stringstream ss;
+		ss << "bones[" << i << "]";
+		BONE_LOCATIONS[i] = glGetUniformLocation(program_main, ss.str().c_str());
+	}
+
+	std::vector<glm::vec3> positions;
+	std::vector<unsigned> bone_ids;
+	std::vector<float> weights;
+	for (auto &vertex : model_cube.meshes[0].vertices) {
+		positions.push_back(vertex.position);
+		for (auto &vertex_weight : vertex.weights) {
+			bone_ids.push_back(vertex_weight.first);
+			weights.push_back(vertex_weight.second);
+		}
+	}
+	size_t positions_size = positions.size()*sizeof(glm::vec3);
+	size_t bone_ids_size = bone_ids.size()*sizeof(unsigned);
+	size_t weights_size = bone_ids.size()*sizeof(float);
+
+	GLuint VAO;
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	GLuint VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		positions_size + bone_ids_size + weights_size,
+		NULL,
+		GL_STATIC_DRAW
+	);
+
+	glBufferSubData(GL_ARRAY_BUFFER, 0, positions_size, positions.data());
+	glBufferSubData(GL_ARRAY_BUFFER, positions_size, bone_ids_size, bone_ids.data());
+	glBufferSubData(GL_ARRAY_BUFFER, positions_size + bone_ids_size, weights_size, weights.data());
+
+	std::cout << positions_size << ", " << bone_ids_size << ", " << weights_size << std::endl;
+	std::cout << positions.size() << ", " << bone_ids.size() << ", " << weights.size() << std::endl;
+	std::cout << "There are " << model_cube.meshes[0].indices.size() << " indices" << std::endl;
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribIPointer(3, 2, GL_INT, 0, (void *) (positions_size));
+	glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 0, (void *) (positions_size + bone_ids_size));
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(3);
+	glEnableVertexAttribArray(4);
+
+	GLuint EBO;
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(
+		GL_ELEMENT_ARRAY_BUFFER,
+		model_cube.meshes[0].indices.size()*sizeof(unsigned),
+		model_cube.meshes[0].indices.data(),
+		GL_STATIC_DRAW
+	);
+
+	glViewport(0, 0, WIDTH, HEIGHT);
+
+	glClearColor(0.5, 0.5, 0.5, 1);
+
+	glm::vec3 player_position {0, 1.7, 5};
+
+	GLuint uniProj = glGetUniformLocation(program_main, "projection");
+	GLuint uniView = glGetUniformLocation(program_main, "view");
+	glm::mat4 projection = glm::perspective(1.4f, static_cast<float>(WIDTH)/HEIGHT, 0.1f, 100.f);
+	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
 
 	bool is_running = true;
+	float dt = 0;
+	float game_time = 0;
+	Uint32 ticks;
 	while (is_running) {
+		Uint32 new_ticks = SDL_GetTicks();
+		dt = (new_ticks - ticks) / 1000.f;
+		ticks = new_ticks;
+		game_time += dt;
+
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
 			switch (event.type) {
@@ -388,9 +484,29 @@ int main()
 			}
 		}
 
+		glm::mat4 view;
+		static float i = 0;
+		i += 0.01;
+		view = glm::translate(view, -player_position);
+		view = glm::rotate(view, i, glm::vec3(0, 1, 0));
+		glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+
+		for (auto &mesh : model_cube.meshes) {
+			auto transforms = mesh.get_transforms(game_time);
+			std::cout << "Got " << transforms.size() << " transforms!" << std::endl;
+			for (int i = 0; i < transforms.size(); ++i) {
+				std::cout << "Matrix:" << std::endl;
+				print_matrix(transforms[i]);
+				glUniformMatrix4fv(BONE_LOCATIONS[i], 1, GL_FALSE, glm::value_ptr(transforms[i]));
+			}
+		}
+		/*
+		*/
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
+		// glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, model_cube.meshes[0].indices.size(), GL_UNSIGNED_INT, 0);
 
 		SDL_GL_SwapWindow(window);
 	}
