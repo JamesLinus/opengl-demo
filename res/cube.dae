@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.70.0 commit date:2014-04-10, commit time:11:49, hash:f93bc76</authoring_tool>
     </contributor>
-    <created>2014-04-14T02:45:11</created>
-    <modified>2014-04-14T02:45:11</modified>
+    <created>2014-04-17T00:35:35</created>
+    <modified>2014-04-17T00:35:35</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -190,9 +190,9 @@
           </technique_common>
         </source>
         <source id="Armature_Cube-skin-weights">
-          <float_array id="Armature_Cube-skin-weights-array" count="24">0.9097974 0.09020262 0.9173129 0.08268707 0.9097975 0.09020256 0.9173129 0.08268707 0.5 0.5000001 0.5 0.5000001 0.5 0.5 0.5 0.5000001 0.09020256 0.9097974 0.08268707 0.917313 0.09020251 0.9097974 0.08268702 0.9173129</float_array>
+          <float_array id="Armature_Cube-skin-weights-array" count="16">1 1 1 1 0.5 0.5 0.5001752 0.4998248 0.5 0.5 0.5 0.5 1 1 1 1</float_array>
           <technique_common>
-            <accessor source="#Armature_Cube-skin-weights-array" count="24" stride="1">
+            <accessor source="#Armature_Cube-skin-weights-array" count="16" stride="1">
               <param name="WEIGHT" type="float"/>
             </accessor>
           </technique_common>
@@ -204,8 +204,8 @@
         <vertex_weights count="12">
           <input semantic="JOINT" source="#Armature_Cube-skin-joints" offset="0"/>
           <input semantic="WEIGHT" source="#Armature_Cube-skin-weights" offset="1"/>
-          <vcount>2 2 2 2 2 2 2 2 2 2 2 2 </vcount>
-          <v>0 0 1 1 0 2 1 3 0 4 1 5 0 6 1 7 0 8 1 9 0 10 1 11 0 12 1 13 0 14 1 15 0 16 1 17 0 18 1 19 0 20 1 21 0 22 1 23</v>
+          <vcount>1 1 1 1 2 2 2 2 1 1 1 1 </vcount>
+          <v>0 0 0 1 0 2 0 3 0 4 1 5 0 6 1 7 0 8 1 9 0 10 1 11 1 12 1 13 1 14 1 15</v>
         </vertex_weights>
       </skin>
     </controller>
