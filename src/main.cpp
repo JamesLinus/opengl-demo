@@ -468,7 +468,7 @@ int main()
 	bool is_running = true;
 	float dt = 0;
 	float game_time = 0;
-	Uint32 ticks;
+	Uint32 ticks = 0;
 	while (is_running) {
 		Uint32 new_ticks = SDL_GetTicks();
 		dt = (new_ticks - ticks) / 1000.f;
