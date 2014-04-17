@@ -406,9 +406,15 @@ int main()
 	std::vector<float> weights;
 	for (auto &vertex : model_cube.meshes[0].vertices) {
 		positions.push_back(vertex.position);
+		size_t i = 0;
 		for (auto &vertex_weight : vertex.weights) {
+			i++;
 			bone_ids.push_back(vertex_weight.first);
 			weights.push_back(vertex_weight.second);
+		}
+		for (; i < 2; ++i) {
+			bone_ids.push_back(-1);
+			weights.push_back(0);
 		}
 	}
 	size_t positions_size = positions.size()*sizeof(glm::vec3);
