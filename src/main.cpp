@@ -491,7 +491,7 @@ int main()
 		static float i = 0;
 		i += 0.01;
 		view = glm::translate(view, -player_position);
-		view = glm::rotate(view, i, glm::vec3(0, 1, 0));
+		// view = glm::rotate(view, i, glm::vec3(0, 1, 0));
 		glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
 		for (auto &mesh : model_cube.meshes) {
