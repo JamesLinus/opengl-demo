@@ -102,8 +102,8 @@ struct Model
 				std::cout << "--- It has " << animation_node.rotations.size() << " rotations" << std::endl;
 				auto rotation_index = find_rotation(animation_time, animation_node);
 				auto rotation_index_next = rotation_index + 1;
-				float dt = animation_node.rotations[rotation_index].first
-					- animation_node.rotations[rotation_index_next].first;
+				float dt = animation_node.rotations[rotation_index_next].first
+					- animation_node.rotations[rotation_index].first;
 				float factor = (animation_time - animation_node.rotations[rotation_index].first) / dt;
 				auto start_rotation = (animation_node.rotations[rotation_index].second);
 				auto end_rotation = (animation_node.rotations[rotation_index_next].second);
