@@ -461,7 +461,7 @@ int main()
 
 	glClearColor(0.5, 0.5, 0.5, 1);
 
-	glm::vec3 player_position {0, 1.7, 5};
+	glm::vec3 player_position {0, 0, 5};
 
 	GLuint uniProj = glGetUniformLocation(program_main, "projection");
 	GLuint uniView = glGetUniformLocation(program_main, "view");
