@@ -105,12 +105,9 @@ struct Model
 				float dt = animation_node.rotations[rotation_index].first
 					- animation_node.rotations[rotation_index_next].first;
 				float factor = (animation_time - animation_node.rotations[rotation_index].first) / dt;
-				auto start_rotation = glm_to_assimp(animation_node.rotations[rotation_index].second);
-				auto end_rotation = glm_to_assimp(animation_node.rotations[rotation_index_next].second);
-				// auto rotation = glm::mix(start_rotation, end_rotation, factor);
-				aiQuaternion ai_rotation;
-				aiQuaternion::Interpolate(ai_rotation, start_rotation, end_rotation, factor);
-				auto rotation = assimp_to_glm(ai_rotation);
+				auto start_rotation = (animation_node.rotations[rotation_index].second);
+				auto end_rotation = (animation_node.rotations[rotation_index_next].second);
+				auto rotation = glm::mix(start_rotation, end_rotation, factor);
 				std::cout << "Rotating by " << rotation << std::endl;
 				glm::mat4 rotation_matrix = glm::mat4_cast(rotation);
 
