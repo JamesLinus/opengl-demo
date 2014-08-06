@@ -1,4 +1,4 @@
-#version 130
+#version 140
 
 in vec4 Position;
 in vec3 Normal;
@@ -10,10 +10,12 @@ uniform vec3 Ambient;
 uniform vec3 LightPosition;
 uniform vec3 HalfVector;
 
-uniform sampler2D texture;
+uniform sampler2D thetexture;
 uniform sampler2DShadow shadowTexture;
 
 in vec4 shadowCoords;
+
+out vec4 outColor;
 
 void main()
 {
@@ -45,7 +47,7 @@ void main()
 	vec3 scatteredLight = Ambient + LightColor * diffuse * attenuation;
 	vec3 reflectedLight = LightColor * specular * 0.5 * attenuation;
 
-	vec4 color = texture2D(texture, TextureCoords);
+	vec4 color = texture(thetexture, TextureCoords);
 	vec3 rgb = min(color.rgb * scatteredLight + reflectedLight, vec3(1.0));
-	gl_FragColor = vec4(rgb, 1.0);
+	outColor = vec4(rgb, 1.0);
 }
