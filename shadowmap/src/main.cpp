@@ -8,7 +8,7 @@
 
 #include <Shader.hpp>
 
-#include <SFML/Window.hpp>
+#include <SDL2/SDL.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,8 +22,8 @@
 #include <iostream>
 #include <map>
 
-constexpr int WIDTH  = 800,
-              HEIGHT = 600;
+int WIDTH  = 800,
+    HEIGHT = 600;
 
 constexpr double PiOver180 = 3.141592653589793238/180;
 
@@ -31,7 +31,8 @@ constexpr int shadowMapSize = 1024;
 
 std::string search_path;
 
-sf::Window window;
+SDL_Window* window;
+bool is_running = true;
 float gameTime;
 
 GLuint shaderProgram;
@@ -60,24 +61,33 @@ std::map<std::string, std::unique_ptr<GLModel>> models;
 
 void setPerspective()
 {
-	projection = glm::perspective(85.0f, (float) window.getSize().x / window.getSize().y, 1.5f, 25.0f);
+	projection = glm::perspective(85.0f, (float) WIDTH / HEIGHT, 1.5f, 25.0f);
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
-	glViewport(0, 0, window.getSize().x, window.getSize().y);
+	glViewport(0, 0, WIDTH, HEIGHT);
 }
 
-void handleEvent(sf::Event &event)
+void handleEvent(SDL_Event &event)
 {
 	switch (event.type) {
-	case sf::Event::KeyPressed:
-		switch (event.key.code) {
-		case sf::Keyboard::Escape:
-			window.close();
+	case SDL_QUIT:
+		is_running = false;
+		break;
+	case SDL_KEYDOWN:
+		switch (event.key.keysym.sym) {
+		case SDLK_ESCAPE:
+			is_running = false;
 			break;
 		default: break;
 		}
 		break;
-	case sf::Event::Resized:
-		std::cout << "Resized to " << event.size.width << ", " << event.size.height << std::endl;
+	case SDL_WINDOWEVENT:
+		switch (event.window.event) {
+		case SDL_WINDOWEVENT_RESIZED:
+			WIDTH = event.window.data1;
+			HEIGHT = event.window.data2;
+			std::cout << "Resized to " << WIDTH << ", " << HEIGHT << std::endl;
+			break;
+		}
 		break;
 	default: break;
 	}
@@ -222,34 +232,54 @@ int main(int argc, char **argv)
 	search_path += "/";
 	ResourceManager::setSearchPath(search_path);
 
-	sf::ContextSettings contextSettings;
-	contextSettings.depthBits = 24;
-	contextSettings.antialiasingLevel = 8;
+	if (SDL_Init(SDL_INIT_VIDEO)) {
+		std::cerr << "Could not initialize SDL: " << SDL_GetError() << std::endl;
+		exit(1);
+	}
 
-	window.create(sf::VideoMode(WIDTH, HEIGHT), "OpenGL Demo", sf::Style::Default, contextSettings);
-	window.setVerticalSyncEnabled(true);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-	contextSettings = window.getSettings();
-	std::cout
-		<< "DEPTH BITS: " << contextSettings.depthBits << std::endl
-		<< "ANTIALIAS: " << contextSettings.antialiasingLevel << std::endl
-		;
+	window = SDL_CreateWindow("OpenGL Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_OPENGL);
+	if ( ! window) {
+		std::cerr << "Could not create window: " << SDL_GetError() << std::endl;
+		exit(1);
+	}
+
+	SDL_GLContext context = SDL_GL_CreateContext(window);
+	if ( ! context) {
+		std::cerr << "Could not create GL context: " << SDL_GetError() << std::endl;
+		exit(1);
+	}
 
 	glewExperimental = GL_TRUE;
-	glewInit();
+	GLenum err = glewInit();
+	if (GLEW_OK != err) {
+		std::cerr << "Could not initialize GLEW: " << glewGetErrorString(err) << std::endl;
+		exit(1);
+	}
+
+	int major, minor;
+	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major);
+	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor);
+	std::cout << "Got OpenGL " << major << "." << minor << std::endl;
 
 	init();
 
-	sf::Clock clock;
+	Uint32 ticks = 0;
+	while (is_running) {
+		Uint32 new_ticks = SDL_GetTicks();
+		float dt = (new_ticks - ticks) / 1000.f;
+		ticks = new_ticks;
 
-	while (window.isOpen()) {
-		update(clock.restart().asSeconds());
+		update(dt);
 
 		render();
-		window.display();
+		SDL_GL_SwapWindow(window);
 
-		sf::Event event;
-		while (window.pollEvent(event)) {
+		SDL_Event event;
+		while (SDL_PollEvent(&event)) {
 			handleEvent(event);
 		}
 	}
