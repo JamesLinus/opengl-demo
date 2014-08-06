@@ -3,13 +3,23 @@ file( GLOB INC_FILES "src/*.hpp" )
 
 include_directories( "src" )
 
+find_package(OpenGL REQUIRED)
+find_package(GLEW REQUIRED)
+find_package(assimp REQUIRED)
+
+include_directories(
+	${GLEW_INCLUDE_DIRS}
+	${ASSIMP_INCLUDE_DIRS}
+)
+
 add_executable( cubemap ${SRC_FILES} ${INC_FILES} ${COMMON_SOURCE_FILES} ${COMMON_INCLUDE_FILES} )
 
 target_link_libraries(
 	cubemap
 	sfml-graphics sfml-window sfml-system
-	GL GLEW
-	assimp
+	${OPENGL_LIBRARIES}
+	${GLEW_LIBRARIES}
+	${ASSIMP_LIBRARIES}
 )
 
 add_custom_target(
