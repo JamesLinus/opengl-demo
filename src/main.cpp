@@ -372,7 +372,7 @@ int main()
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 
-	Model model_cube = import_model("../res/lock.dae");
+	Model model_cube = import_model("../res/cube.dae");
 
 	std::cout << "COMPILING STUFF!" << std::endl;
 	GLuint vertex_shader = compileShader("../shaders/main.vertex", GL_VERTEX_SHADER);
