@@ -391,8 +391,8 @@ int main()
 	glLinkProgram(program_main);
 	glUseProgram(program_main);
 
-	GLuint BONE_LOCATIONS[2];
-	for (int i = 0; i < 2; ++i) {
+	GLuint BONE_LOCATIONS[20];
+	for (int i = 0; i < 20; ++i) {
 		std::stringstream ss;
 		ss << "bones[" << i << "]";
 		BONE_LOCATIONS[i] = glGetUniformLocation(program_main, ss.str().c_str());

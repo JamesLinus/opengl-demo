@@ -10,7 +10,7 @@ out vec2 Texcoords;
 
 uniform mat4 projection;
 uniform mat4 view;
-uniform mat4 bones[2];
+uniform mat4 bones[20];
 
 void main()
 {
