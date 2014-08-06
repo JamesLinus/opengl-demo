@@ -409,7 +409,7 @@ int main()
 			bone_ids.push_back(vertex_weight.first);
 			weights.push_back(vertex_weight.second);
 		}
-		for (; i < 2; ++i) {
+		for (; i < 4; ++i) {
 			bone_ids.push_back(-1);
 			weights.push_back(0);
 		}
@@ -441,8 +441,8 @@ int main()
 	std::cout << "There are " << model_cube.meshes[0].indices.size() << " indices" << std::endl;
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glVertexAttribIPointer(3, 2, GL_INT, 0, (void *) (positions_size));
-	glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, 0, (void *) (positions_size + bone_ids_size));
+	glVertexAttribIPointer(3, 4, GL_INT, 0, (void *) (positions_size));
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 0, (void *) (positions_size + bone_ids_size));
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(3);
 	glEnableVertexAttribArray(4);

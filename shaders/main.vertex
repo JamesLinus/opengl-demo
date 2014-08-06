@@ -3,8 +3,8 @@
 in vec3 position;
 // in vec3 normal;
 // in vec2 texcoords;
-in ivec2 boneIDs;
-in vec2 weights;
+in ivec4 boneIDs;
+in vec4 weights;
 
 out vec2 Texcoords;
 
@@ -19,6 +19,8 @@ void main()
 	mat4 bone_transform = mat4(0.0);
 	bone_transform += bones[boneIDs[0]] * weights[0];
 	bone_transform += bones[boneIDs[1]] * weights[1];
+	bone_transform += bones[boneIDs[2]] * weights[2];
+	bone_transform += bones[boneIDs[3]] * weights[3];
 
 	bones[1];
 
