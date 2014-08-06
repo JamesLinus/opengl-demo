@@ -10,6 +10,7 @@ include_directories( "common/include" )
 add_subdirectory( shadowmap )
 add_subdirectory( cubemap )
 add_subdirectory( cubeshadow )
+add_subdirectory( skeletalanimation )
 
 add_custom_target(
 	copyfiles
