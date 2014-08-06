@@ -19,6 +19,7 @@
 #include <fstream>
 #include <vector>
 #include <map>
+#include <memory>
 
 SDL_Window* window;
 
