@@ -1,0 +1,11 @@
+#version 140
+
+in vec2 Texcoords;
+
+out vec4 outColor;
+
+void main()
+{
+	// outColor = vec4(1.0);
+	outColor = vec4(Texcoords, 0, 1);
+}

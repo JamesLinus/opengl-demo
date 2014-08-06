@@ -1,0 +1,30 @@
+#version 140
+
+in vec3 position;
+// in vec3 normal;
+// in vec2 texcoords;
+in ivec4 boneIDs;
+in vec4 weights;
+
+out vec2 Texcoords;
+
+uniform mat4 projection;
+uniform mat4 view;
+uniform mat4 bones[20];
+
+void main()
+{
+	Texcoords = weights.xy;
+
+	mat4 bone_transform = mat4(0.0);
+	bone_transform += bones[boneIDs[0]] * weights[0];
+	bone_transform += bones[boneIDs[1]] * weights[1];
+	bone_transform += bones[boneIDs[2]] * weights[2];
+	bone_transform += bones[boneIDs[3]] * weights[3];
+
+	bones[1];
+
+	weights[0];
+
+	gl_Position = projection * view * bone_transform * vec4(position, 1.0);	
+}
