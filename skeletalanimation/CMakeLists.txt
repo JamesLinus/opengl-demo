@@ -32,5 +32,4 @@ target_link_libraries(
 	${OPENGL_LIBRARIES}
 	${GLEW_LIBRARIES}
 	${ASSIMP_LIBRARIES}
-	SDL2_Image
 )
