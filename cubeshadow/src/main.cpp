@@ -181,6 +181,9 @@ void render()
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightView"), 1, GL_FALSE, glm::value_ptr(lightview));
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 	for (auto &model : models) {
+		glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(view * model.second->model_matrix)));
+		glUniformMatrix3fv(glGetUniformLocation(shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
+		glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model.second->model_matrix));
 		model.second->render();
 	}
 }
