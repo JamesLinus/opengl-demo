@@ -137,7 +137,8 @@ void update(float dt)
 	gameTime += dt;
 
 	view = glm::mat4();
-	view = glm::translate(view, -glm::vec3(0, 0, 5));
+	view = glm::translate(view, -glm::vec3(0, 1, 4));
+	view = glm::rotate(view, gameTime*30.f, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 }
 
