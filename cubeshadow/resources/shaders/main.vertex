@@ -6,10 +6,12 @@ in vec2 texcoord;
 uniform mat4 view;
 uniform mat4 projection;
 
+out vec4 WorldPosition;
 out vec2 Texcoord;
 
 void main()
 {
+	WorldPosition = vec4(position, 1.0);
 	Texcoord = texcoord;
 
 	gl_Position = projection * view * vec4(position, 1.0);
