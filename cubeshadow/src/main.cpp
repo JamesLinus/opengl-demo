@@ -122,10 +122,14 @@ void init()
 
 	shadowProjection = glm::frustum(-1, 1, -1, 1, 1, 50);
 	shadowViews[0] = glm::rotate(shadowViews[0], 90.f, glm::vec3(0, 1, 0));
+		shadowViews[0] = glm::rotate(shadowViews[0], 180.f, glm::vec3(1, 0, 0));
 	shadowViews[1] = glm::rotate(shadowViews[1], -90.f, glm::vec3(0, 1, 0));
+		shadowViews[1] = glm::rotate(shadowViews[1], 180.f, glm::vec3(1, 0, 0));
 	shadowViews[2] = glm::rotate(shadowViews[2], -90.f, glm::vec3(1, 0, 0));
 	shadowViews[3] = glm::rotate(shadowViews[3], 90.f, glm::vec3(1, 0, 0));
 	shadowViews[4] = glm::rotate(shadowViews[4], 180.f, glm::vec3(0, 1, 0));
+		shadowViews[4] = glm::rotate(shadowViews[4], 180.f, glm::vec3(0, 0, 1));
+		shadowViews[5] = glm::rotate(shadowViews[5], 180.f, glm::vec3(0, 0, 1));
 }
 
 void update(float dt)
