@@ -8,6 +8,7 @@ in vec2 Texcoord;
 uniform sampler2D tex;
 uniform samplerCube shadowTexture;
 
+uniform mat4 view;
 uniform mat4 lightView;
 
 uniform vec3 LightPosition;
@@ -24,6 +25,7 @@ void main()
 {
 	vec4 Color = texture(tex, Texcoord);
 	vec3 Ambient = vec3(0.1, 0.15, 0.2);
+	vec3 EyeDirection = vec3(0, 0, 1);
 
 	vec4 cubespace_vector = lightView * WorldPosition;
 
@@ -32,11 +34,24 @@ void main()
 
 	bool inShadow = fragment_distance > shadow_distance+0.0001;
 
+	vec3 eyespace_light_position = (view * vec4(LightPosition, 1.0)).xyz;
+	vec3 lightDirection = eyespace_light_position - vec3(Position);
+	float lightDistance = length(lightDirection);
+	lightDirection = lightDirection / lightDistance;
+
+	vec3 halfVector = normalize(lightDirection + EyeDirection);
+
 	float attenuation = 1.0 / (length(cubespace_vector));
 	float diffuse = inShadow ? 0 : 1;
+	float specular = max(0.0, dot(Normal, halfVector));
+	if (diffuse == 0)
+		specular = 0;
+	else
+		specular = pow(specular, 400);
 
 	vec3 scatteredLight = Ambient + vec3(1) * diffuse * attenuation;
+	vec3 reflectedLight = vec3(1) * specular * 0.5 * attenuation;
 
-	vec3 rgb = min(Color.rgb * scatteredLight, 1.0);
+	vec3 rgb = min(Color.rgb * scatteredLight + reflectedLight, 1.0 );
 	gl_FragColor = vec4(rgb, 1.0);
 }
