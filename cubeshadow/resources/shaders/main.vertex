@@ -5,17 +5,20 @@ in vec3 normal;
 in vec2 texcoord;
 
 uniform mat4 view;
+uniform mat4 lightView;
 uniform mat4 projection;
 
 uniform mat3 normalMatrix;
 
 out vec4 WorldPosition;
+out vec4 Position;
 out vec3 Normal;
 out vec2 Texcoord;
 
 void main()
 {
 	WorldPosition = vec4(position, 1.0);
+	Position = view * WorldPosition;
 	Texcoord = texcoord;
 
 	Normal = normalize(normalMatrix * normal);

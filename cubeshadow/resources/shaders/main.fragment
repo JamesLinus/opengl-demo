@@ -1,5 +1,6 @@
 #version 130
 
+in vec4 Position;
 in vec3 Normal;
 in vec4 WorldPosition;
 in vec2 Texcoord;
