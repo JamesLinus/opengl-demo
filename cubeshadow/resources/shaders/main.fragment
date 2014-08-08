@@ -4,10 +4,27 @@ in vec4 WorldPosition;
 in vec2 Texcoord;
 
 uniform sampler2D tex;
+uniform samplerCube shadowTexture;
+
+uniform mat4 lightView;
+
+float zNear = 1;
+float zFar = 50;
+
+float zNormalize(float d)
+{
+	return (d - zNear) / (zFar - zNear);
+}
 
 void main()
 {
 	vec4 rgb = texture(tex, Texcoord);
+	vec4 cubespace_vector = lightView * WorldPosition;
 
-	gl_FragColor = rgb;
+	float shadow_distance = texture(shadowTexture, (cubespace_vector).xyz).x;
+	float fragment_distance = zNormalize(length(cubespace_vector));
+
+	bool inShadow = fragment_distance > shadow_distance+0.0001;
+
+	gl_FragColor = min((vec4(!inShadow) + vec4(0.1, 0.15, 0.2, 1.0)) * rgb, 1.0);
 }

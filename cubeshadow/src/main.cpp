@@ -167,6 +167,13 @@ void render()
 	glViewport(0, 0, window.getSize().x, window.getSize().y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, shadowCubeTexture);
+	glUniform1i(glGetUniformLocation(shaderProgram, "shadowTexture"), 1);
+	glActiveTexture(GL_TEXTURE0);
+
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightView"), 1, GL_FALSE, glm::value_ptr(lightview));
+	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 	for (auto &model : models) {
 		model.second->render();
 	}
