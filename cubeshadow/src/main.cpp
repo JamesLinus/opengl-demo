@@ -139,6 +139,32 @@ void update(float dt)
 
 void render()
 {
+	// Draw shadow textures
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+	glUseProgram(programShadow);
+	glViewport(0, 0, shadowTextureSize, shadowTextureSize);
+	glm::mat4 lightview;
+	glm::vec3 lightPosition;
+
+	lightview = glm::translate(lightview, -lightPosition);
+	glUniformMatrix4fv(glGetUniformLocation(programShadow, "lightView"), 1, GL_FALSE, glm::value_ptr(lightview));
+	for (size_t i = 0; i < 6; i++) {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, shadowCubeTexture, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glm::mat4 theview = shadowViews[i] * lightview;
+		glUniformMatrix4fv(glGetUniformLocation(programShadow, "view"), 1, GL_FALSE, glm::value_ptr(theview));
+		glUniformMatrix4fv(glGetUniformLocation(programShadow, "projection"), 1, GL_FALSE, glm::value_ptr(shadowProjection));
+
+		for (auto &model : models) {
+			model.second->render();
+		}
+	}
+
+	// Draw normal
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glUseProgram(shaderProgram);
+	glViewport(0, 0, window.getSize().x, window.getSize().y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	for (auto &model : models) {
