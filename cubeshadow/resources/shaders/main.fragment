@@ -32,12 +32,16 @@ void main()
 	float shadow_distance = texture(shadowTexture, (cubespace_vector).xyz).x;
 	float fragment_distance = zNormalize(length(cubespace_vector));
 
-	bool inShadow = fragment_distance > shadow_distance+0.0001;
-
 	vec3 eyespace_light_position = (view * vec4(LightPosition, 1.0)).xyz;
 	vec3 lightDirection = eyespace_light_position - vec3(Position);
 	float lightDistance = length(lightDirection);
 	lightDirection = lightDirection / lightDistance;
+
+	float cosTheta = clamp(dot(normalize(Normal), normalize(lightDirection)), 0, 1);
+	float bias = 0.005*tan(acos(cosTheta));
+	bias = clamp(bias, 0, 0.01);
+
+	bool inShadow = fragment_distance > shadow_distance + bias;
 
 	vec3 halfVector = normalize(lightDirection + EyeDirection);
 
