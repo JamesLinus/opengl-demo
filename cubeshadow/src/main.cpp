@@ -148,7 +148,9 @@ void render()
 	glUseProgram(programShadow);
 	glViewport(0, 0, shadowTextureSize, shadowTextureSize);
 	glm::mat4 lightview;
-	glm::vec3 lightPosition;
+	static float f = 0;
+	f += 0.03;
+	glm::vec3 lightPosition = glm::vec3(sin(f)*3, 2, cos(f)*3);
 
 	lightview = glm::translate(lightview, -lightPosition);
 	glUniformMatrix4fv(glGetUniformLocation(programShadow, "lightView"), 1, GL_FALSE, glm::value_ptr(lightview));
