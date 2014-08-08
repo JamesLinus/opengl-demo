@@ -22,6 +22,8 @@ float zNormalize(float d)
 void main()
 {
 	vec4 Color = texture(tex, Texcoord);
+	vec3 Ambient = vec3(0.1, 0.15, 0.2);
+
 	vec4 cubespace_vector = lightView * WorldPosition;
 
 	float shadow_distance = texture(shadowTexture, (cubespace_vector).xyz).x;
@@ -29,5 +31,11 @@ void main()
 
 	bool inShadow = fragment_distance > shadow_distance+0.0001;
 
-	gl_FragColor = min((vec4(!inShadow) + vec4(0.1, 0.15, 0.2, 1.0)) * Color, 1.0);
+	float attenuation = 1.0 / (length(cubespace_vector));
+	float diffuse = inShadow ? 0 : 1;
+
+	vec3 scatteredLight = Ambient + vec3(1) * diffuse * attenuation;
+
+	vec3 rgb = min(Color.rgb * scatteredLight, 1.0);
+	gl_FragColor = vec4(rgb, 1.0);
 }
