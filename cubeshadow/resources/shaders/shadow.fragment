@@ -1,6 +1,16 @@
 #version 130
 
+in vec4 Position;
+
+float zNear = 1;
+float zFar = 50;
+
+float zNormalize(float d)
+{
+	return (d - zNear) / (zFar - zNear);
+}
+
 void main()
 {
-	gl_FragColor = vec4(1.0);
+	gl_FragDepth = zNormalize(length(Position));
 }

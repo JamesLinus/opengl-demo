@@ -5,11 +5,13 @@ in vec3 position;
 uniform mat4 view;
 uniform mat4 projection;
 
+uniform mat4 lightView;
+
 out vec4 Position;
 
 void main()
 {
-	Position = view * vec4(position, 1.0);
+	Position = lightView * vec4(position, 1.0);
 
 	gl_Position = projection * view * vec4(position, 1.0);
 }

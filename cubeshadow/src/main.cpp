@@ -104,15 +104,16 @@ void init()
 	glBindTexture(GL_TEXTURE_CUBE_MAP, shadowCubeTexture);
 	for (size_t i = 0; i < 6; i++)
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_DEPTH_COMPONENT32, shadowTextureSize, shadowTextureSize, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
 	float color[] = { 0, 0, 0, 0 };
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glTexParameterfv(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BORDER_COLOR, color);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 
 	glGenFramebuffers(1, &FBO);
 	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
@@ -121,10 +122,14 @@ void init()
 
 	shadowProjection = glm::frustum(-1, 1, -1, 1, 1, 50);
 	shadowViews[0] = glm::rotate(shadowViews[0], 90.f, glm::vec3(0, 1, 0));
+		shadowViews[0] = glm::rotate(shadowViews[0], 180.f, glm::vec3(1, 0, 0));
 	shadowViews[1] = glm::rotate(shadowViews[1], -90.f, glm::vec3(0, 1, 0));
+		shadowViews[1] = glm::rotate(shadowViews[1], 180.f, glm::vec3(1, 0, 0));
 	shadowViews[2] = glm::rotate(shadowViews[2], -90.f, glm::vec3(1, 0, 0));
 	shadowViews[3] = glm::rotate(shadowViews[3], 90.f, glm::vec3(1, 0, 0));
 	shadowViews[4] = glm::rotate(shadowViews[4], 180.f, glm::vec3(0, 1, 0));
+		shadowViews[4] = glm::rotate(shadowViews[4], 180.f, glm::vec3(0, 0, 1));
+		shadowViews[5] = glm::rotate(shadowViews[5], 180.f, glm::vec3(0, 0, 1));
 }
 
 void update(float dt)
@@ -132,15 +137,55 @@ void update(float dt)
 	gameTime += dt;
 
 	view = glm::mat4();
-	view = glm::translate(view, -glm::vec3(0, 0, 5));
+	view = glm::translate(view, -glm::vec3(0, 1, 4));
+	view = glm::rotate(view, gameTime*30.f, glm::vec3(0, 1, 0));
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 }
 
 void render()
 {
+	// Draw shadow textures
+	glBindFramebuffer(GL_FRAMEBUFFER, FBO);
+	glUseProgram(programShadow);
+	glViewport(0, 0, shadowTextureSize, shadowTextureSize);
+	glm::mat4 lightview;
+	static float f = 0;
+	f += 0.03;
+	glm::vec3 lightPosition = glm::vec3(sin(f)*3, 2, cos(f)*3);
+
+	lightview = glm::translate(lightview, -lightPosition);
+	glUniformMatrix4fv(glGetUniformLocation(programShadow, "lightView"), 1, GL_FALSE, glm::value_ptr(lightview));
+	for (size_t i = 0; i < 6; i++) {
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, shadowCubeTexture, 0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glm::mat4 theview = shadowViews[i] * lightview;
+		glUniformMatrix4fv(glGetUniformLocation(programShadow, "view"), 1, GL_FALSE, glm::value_ptr(theview));
+		glUniformMatrix4fv(glGetUniformLocation(programShadow, "projection"), 1, GL_FALSE, glm::value_ptr(shadowProjection));
+
+		for (auto &model : models) {
+			model.second->render();
+		}
+	}
+
+	// Draw normal
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glUseProgram(shaderProgram);
+	glViewport(0, 0, window.getSize().x, window.getSize().y);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, shadowCubeTexture);
+	glUniform1i(glGetUniformLocation(shaderProgram, "shadowTexture"), 1);
+	glActiveTexture(GL_TEXTURE0);
+
+	glUniform3fv(glGetUniformLocation(shaderProgram, "LightPosition"), 1, glm::value_ptr(lightPosition));
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightView"), 1, GL_FALSE, glm::value_ptr(lightview));
+	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 	for (auto &model : models) {
+		glm::mat3 normalMatrix = glm::transpose(glm::inverse(glm::mat3(view * model.second->model_matrix)));
+		glUniformMatrix3fv(glGetUniformLocation(shaderProgram, "normalMatrix"), 1, GL_FALSE, glm::value_ptr(normalMatrix));
+		glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model.second->model_matrix));
 		model.second->render();
 	}
 }
