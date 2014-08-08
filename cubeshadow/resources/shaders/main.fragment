@@ -25,6 +25,7 @@ void main()
 {
 	vec4 Color = texture(tex, Texcoord);
 	vec3 Ambient = vec3(0.1, 0.15, 0.2);
+	vec3 LightColor = vec3(3);
 	vec3 EyeDirection = vec3(0, 0, 1);
 
 	vec4 cubespace_vector = lightView * WorldPosition;
@@ -53,8 +54,8 @@ void main()
 	else
 		specular = pow(specular, 400);
 
-	vec3 scatteredLight = Ambient + vec3(1) * diffuse * attenuation;
-	vec3 reflectedLight = vec3(1) * specular * 0.5 * attenuation;
+	vec3 scatteredLight = Ambient + LightColor * diffuse * attenuation;
+	vec3 reflectedLight = LightColor * specular * 0.5 * attenuation;
 
 	vec3 rgb = min(Color.rgb * scatteredLight + reflectedLight, 1.0 );
 	gl_FragColor = vec4(rgb, 1.0);
