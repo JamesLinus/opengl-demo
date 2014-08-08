@@ -24,7 +24,7 @@ float zNormalize(float d)
 void main()
 {
 	vec4 Color = texture(tex, Texcoord);
-	vec3 Ambient = vec3(0.1, 0.15, 0.2);
+	vec3 Ambient = vec3(0.1, 0.1, 0.2);
 	vec3 LightColor = vec3(3);
 	vec3 EyeDirection = vec3(0, 0, 1);
 
