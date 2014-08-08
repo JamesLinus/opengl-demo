@@ -178,6 +178,7 @@ void render()
 	glUniform1i(glGetUniformLocation(shaderProgram, "shadowTexture"), 1);
 	glActiveTexture(GL_TEXTURE0);
 
+	glUniform3fv(glGetUniformLocation(shaderProgram, "LightPosition"), 1, glm::value_ptr(lightPosition));
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "lightView"), 1, GL_FALSE, glm::value_ptr(lightview));
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 	for (auto &model : models) {

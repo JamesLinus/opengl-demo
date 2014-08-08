@@ -9,6 +9,8 @@ uniform samplerCube shadowTexture;
 
 uniform mat4 lightView;
 
+uniform vec3 LightPosition;
+
 float zNear = 1;
 float zFar = 50;
 
