@@ -2,11 +2,11 @@
 
 in vec2 Texcoord;
 
-uniform sampler2D texture;
+uniform sampler2D tex;
 
 void main()
 {
-	vec4 rgb = texture2D(texture, Texcoord);
+	vec4 rgb = texture(tex, Texcoord);
 
 	gl_FragColor = rgb;
 }
